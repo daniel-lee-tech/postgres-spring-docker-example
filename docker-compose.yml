@@ -1,0 +1,29 @@
+version: "3"
+services:
+  realblock:
+    container_name: realblock
+    build:
+      context: .
+    depends_on:
+      - database
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://database:5432/unicorn_user
+      - SPRING_DATASOURCE_USERNAME=unicorn_user
+      - SPRING_DATASOURCE_PASSWORD=magical_password
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+    volumes:
+      - target:/usr/app/target/*
+    ports:
+      - "8080:8080"
+  database:
+    ports:
+      - "5432:5432"
+    image: "postgres" # use latest official postgres version
+    environment:
+      - POSTGRES_USER=unicorn_user
+      - POSTGRES_PASSWORD=magical_password
+    volumes:
+      - database-data:/var/lib/postgresql/data/ # persist data even if container shuts downvolumes:
+volumes:
+  database-data: # named volumes can be managed easier using docker-compose
+  target:
